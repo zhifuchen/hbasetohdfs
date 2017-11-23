@@ -1,17 +1,11 @@
-package com.cloudera.sa.hbase.to.hdfs;
+package com.wysengine.fishing.export;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.zip.GZIPOutputStream;
 
-import org.apache.avro.mapreduce.AvroKeyOutputFormat;
-import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -28,7 +22,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.compress.GzipCodec;
 import org.apache.hadoop.io.compress.SnappyCodec;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
 public class ExportHBaseTableToDelimiteredSeq {

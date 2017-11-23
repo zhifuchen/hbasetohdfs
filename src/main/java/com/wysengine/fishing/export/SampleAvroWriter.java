@@ -1,4 +1,4 @@
-package com.cloudera.sa.hbase.to.hdfs;
+package com.wysengine.fishing.export;
 
 import java.io.File;
 import java.io.IOException;

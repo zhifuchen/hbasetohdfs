@@ -1,15 +1,8 @@
-package com.cloudera.sa.hbase.to.hdfs;
+package com.wysengine.fishing.export;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.zip.GZIPOutputStream;
 
 import org.apache.avro.Schema;
 import org.apache.avro.Schema.Field;
@@ -17,11 +10,8 @@ import org.apache.avro.Schema.Type;
 import org.apache.avro.generic.GenericData.Record;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.mapred.AvroKey;
-import org.apache.avro.mapred.AvroOutputFormat;
 import org.apache.avro.mapreduce.AvroJob;
 import org.apache.avro.mapreduce.AvroKeyOutputFormat;
-import org.apache.avro.mapreduce.AvroKeyValueOutputFormat;
-import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -34,11 +24,9 @@ import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.compress.GzipCodec;
 import org.apache.hadoop.io.compress.SnappyCodec;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 
 public class ExportHBaseTableToAvro {
 

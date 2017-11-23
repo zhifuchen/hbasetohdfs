@@ -1,8 +1,7 @@
-package com.cloudera.sa.hbase.to.hdfs;
+package com.wysengine.fishing.export;
 
 public class App {
   public static void main(String[] args) throws Exception {
-    System.out.println("Version: 0.0.5");
     if (args.length == 0) {
       System.out.println("commends:");
     }
@@ -12,7 +11,7 @@ public class App {
     System.arraycopy(args, 1, subArgs, 0, args.length - 1);
 
     if (command.equals("CreateTable")) {
-      CreateTable.main(subArgs);
+//      CreateTable.main(subArgs);
     } else if (command.equals("PopulateTable")) {
       PopulateTable.main(subArgs);
     } else if (command.equals("ExportHBaseTableToAvro")) {

@@ -1,11 +1,10 @@
-package com.cloudera.sa.hbase.to.hdfs;
+package com.wysengine.fishing.export;
 
 import java.io.IOException;
 
 import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.fs.Path;
-
-import parquet.avro.AvroParquetReader;
+import org.apache.parquet.avro.AvroParquetReader;
 
 public class ParquetReader {
   public static void main(String[] args) throws IOException {

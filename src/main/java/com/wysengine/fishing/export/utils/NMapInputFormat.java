@@ -1,4 +1,4 @@
-package com.cloudera.sa.hbase.to.hdfs.utils;
+package com.wysengine.fishing.export.utils;
 
 /**
 *
