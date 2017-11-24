@@ -118,7 +118,7 @@ public class ExportHBaseTableToParquet {
             try {
                 // create hive table
                 HiveUtil.createTable(pathSuffix);
-                // delete hbase data
+                // delete hbase data todo
 //                HbaseUtil.deleteRows(hbaseTableName, startRow, stopRow);
                 // major compact
 //                HbaseUtil.majorCompact(hbaseTableName);

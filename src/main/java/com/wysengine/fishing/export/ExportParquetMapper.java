@@ -18,8 +18,8 @@ import java.util.HashMap;
  * Created by chenzhifu on 2017/11/23.
  */
 public class ExportParquetMapper extends TableMapper<Void, GenericRecord> {
-    ArrayList<String> columnNames = new ArrayList<>();
-    Schema schema;
+    private ArrayList<String> columnNames = new ArrayList<>();
+    private Schema schema;
 
     @Override
     public void setup(Context context) throws IOException {
