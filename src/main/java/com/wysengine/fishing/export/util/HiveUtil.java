@@ -23,11 +23,13 @@ public class HiveUtil {
         Class.forName(driverName);
         try (Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000", "hdfs", "");
              Statement stmt = con.createStatement()) {
-            stmt.execute("DROP TABLE IF EXISTS " + tableName);
             String avroTable = avroTablePrefix + tableName;
+            stmt.execute("DROP TABLE IF EXISTS " + avroTable);
             String avroSchemaUrl = hdfsUrl +  outputPath + "schema/" + tableName + "/schema.avsc";
             stmt.execute("CREATE TABLE " + avroTable + " ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe' STORED AS AVRO TBLPROPERTIES ('avro.schema.url'='" + avroSchemaUrl + "')");
+
             String parquetTable =  parquetTablePrefix + tableName;
+            stmt.execute("DROP TABLE IF EXISTS " + parquetTable);
             String parquetUrl = hdfsUrl + outputPath + "parquet/" + tableName;
             stmt.execute("CREATE EXTERNAL TABLE " + parquetTable + " LIKE " + avroTable + " STORED AS PARQUET LOCATION '"+ parquetUrl +"'");
         }
