@@ -1,6 +1,5 @@
-package com.wysengine.fishing.export.utils;
+package com.wysengine.fishing.export.util;
 
-import com.wysengine.fishing.export.util.Const;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;

@@ -1,4 +1,4 @@
-package com.wysengine.fishing.export.utils;
+package com.wysengine.fishing.export.util;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;

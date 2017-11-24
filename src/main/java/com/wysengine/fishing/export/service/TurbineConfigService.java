@@ -5,8 +5,8 @@ import com.wysengine.fishing.export.dao.Database;
 import com.wysengine.fishing.export.dao.DatabaseFactory;
 import com.wysengine.fishing.export.entity.DatabaseType;
 import com.wysengine.fishing.export.entity.Schema;
-import com.wysengine.fishing.export.utils.JacksonUtil;
-import com.wysengine.fishing.export.utils.PropertyUtil;
+import com.wysengine.fishing.export.util.JacksonUtil;
+import com.wysengine.fishing.export.util.PropertyUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;

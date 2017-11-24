@@ -1,6 +1,6 @@
 package com.wysengine.fishing.export.entity;
 
-import com.wysengine.fishing.export.utils.DateUtil;
+import com.wysengine.fishing.export.util.DateUtil;
 
 import java.util.List;
 

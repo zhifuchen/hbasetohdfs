@@ -1,4 +1,4 @@
-package com.wysengine.fishing.export.utils;
+package com.wysengine.fishing.export.util;
 
 import java.util.Random;
 import java.util.regex.Pattern;

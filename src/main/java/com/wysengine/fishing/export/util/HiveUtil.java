@@ -1,4 +1,4 @@
-package com.wysengine.fishing.export.utils;
+package com.wysengine.fishing.export.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
