@@ -19,18 +19,18 @@ public class HiveUtil {
     private static final String avroTablePrefix = "avro_";
     private static final String parquetTablePrefix = "parquet_";
 
-    public static void createTable(String tableName) throws SQLException, ClassNotFoundException {
+    public static void createTable(String turbineMonth) throws SQLException, ClassNotFoundException {
         Class.forName(driverName);
         try (Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000", "hdfs", "");
              Statement stmt = con.createStatement()) {
-            String avroTable = avroTablePrefix + tableName;
+            String avroTable = avroTablePrefix + turbineMonth;
             stmt.execute("DROP TABLE IF EXISTS " + avroTable);
-            String avroSchemaUrl = hdfsUrl +  outputPath + "schema/" + tableName + "/schema.avsc";
+            String avroSchemaUrl = hdfsUrl +  outputPath + "schema/" + turbineMonth + "/schema.avsc";
             stmt.execute("CREATE TABLE " + avroTable + " ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe' STORED AS AVRO TBLPROPERTIES ('avro.schema.url'='" + avroSchemaUrl + "')");
 
-            String parquetTable =  parquetTablePrefix + tableName;
+            String parquetTable =  parquetTablePrefix + turbineMonth;
             stmt.execute("DROP TABLE IF EXISTS " + parquetTable);
-            String parquetUrl = hdfsUrl + outputPath + "parquet/" + tableName;
+            String parquetUrl = hdfsUrl + outputPath + "parquet/" + turbineMonth;
             stmt.execute("CREATE EXTERNAL TABLE " + parquetTable + " LIKE " + avroTable + " STORED AS PARQUET LOCATION '"+ parquetUrl +"'");
         }
     }
