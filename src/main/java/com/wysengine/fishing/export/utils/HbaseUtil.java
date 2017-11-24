@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class HbaseUtil {
 
-    public static Configuration getHbaseConfig() {
+    private static Configuration getHbaseConfig() {
         Configuration configuration = new Configuration();
         configuration.set(Const.hbaseZookeeperQuorum, PropertyUtil.getProperty(Const.hbaseZookeeperQuorum));
         configuration.set(Const.hbaseZookeeperPropertyClientPort, PropertyUtil.getProperty(Const.hbaseZookeeperPropertyClientPort));
@@ -23,13 +23,12 @@ public class HbaseUtil {
         return configuration;
     }
 
-    public void deleteRows(String tableName, String startRow, String endRow) throws IOException {
-        Connection connection = ConnectionFactory.createConnection(getHbaseConfig());
-        Table table = connection.getTable(TableName.valueOf(tableName));
-        try {
+    public static void deleteRows(String tableName, String startRow, String stopRow) throws IOException {
+        try (Connection connection = ConnectionFactory.createConnection(getHbaseConfig());
+             Table table = connection.getTable(TableName.valueOf(tableName))) {
             Scan scan = new Scan();
             scan.setStartRow(Bytes.toBytes(startRow));
-            scan.setStartRow(Bytes.toBytes(endRow));
+            scan.setStopRow(Bytes.toBytes(stopRow));
             ResultScanner resultScanner = table.getScanner(scan);
             List<Delete> deletes = new ArrayList<>();
             for (Result result : resultScanner) {
@@ -37,9 +36,6 @@ public class HbaseUtil {
                 deletes.add(new Delete(row));
             }
             table.delete(deletes);
-        } finally {
-            table.close();
-            connection.close();
         }
     }
 }

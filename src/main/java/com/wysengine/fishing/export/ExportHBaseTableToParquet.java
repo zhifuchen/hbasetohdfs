@@ -3,9 +3,7 @@ package com.wysengine.fishing.export;
 import com.wysengine.fishing.export.service.TurbineConfigService;
 import com.wysengine.fishing.export.service.TurbineService;
 import com.wysengine.fishing.export.util.Const;
-import com.wysengine.fishing.export.utils.HDFSUtil;
-import com.wysengine.fishing.export.utils.JodaTimeUtil;
-import com.wysengine.fishing.export.utils.PropertyUtil;
+import com.wysengine.fishing.export.utils.*;
 import org.apache.avro.Schema;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -24,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -44,30 +43,25 @@ public class ExportHBaseTableToParquet {
         List<Map<String, Object>> turbines = turbineService.getRunModelTurbines();
         for (Map<String,Object> turbine : turbines) {
             String turbineCode = String.valueOf(turbine.get("CODE_"));
-            logger.info("----------------export turbine {}", turbineCode);
+            logger.info("------------export turbine {}------------", turbineCode);
             exportTable(turbineCode, compressionCodec);
         }
     }
 
     private static void exportTable(String turbineCode, String compressionCodec) throws IOException, InterruptedException, ClassNotFoundException {
-        DateTime lastMonthDate = JodaTimeUtil.now().minusMonths(1);
+        DateTime lastMonthDate = JodaTimeUtil.now().minusMonths(7);
 
         // TODO: 2017/11/23
 //        DateTime.Property lastMonth = lastMonthDate.dayOfMonth();
 //        String startRow = String.valueOf(lastMonth.withMinimumValue().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate().getTime());
-//        String endRow = String.valueOf(lastMonth.withMaximumValue().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).toDate().getTime());
-
+//        String stopRow = String.valueOf(lastMonth.withMaximumValue().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).toDate().getTime());
         String startRow = "1508428800000";
-        String endRow = "1511107200000";
+        String stopRow = "1511107200000";
 
-        String pathSuffix = turbineCode + "_" + lastMonthDate.toString("yyyy-MM");
+        String pathSuffix = turbineCode + "_" + lastMonthDate.toString("yyyyMM");
         String outputPath = PropertyUtil.getProperty("output.path");
         String parquetPath = outputPath + "parquet/" + pathSuffix;
         String schemaPath = outputPath + "schema/" + pathSuffix;
-        File file = new File(schemaPath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
         String schemaFileName = schemaPath + "/schema.avsc";
         String schema = TurbineConfigService.getTurbineSchema(turbineCode);
         FileUtils.write(new File(schemaFileName), schema);
@@ -89,10 +83,10 @@ public class ExportHBaseTableToParquet {
         scan.setCacheBlocks(false); // don't set to true for MR jobs
         scan.addFamily(Bytes.toBytes(PropertyUtil.getProperty("hbase.columnFamly.realtime")));
         scan.setStartRow(Bytes.toBytes(startRow));
-        scan.setStopRow(Bytes.toBytes(endRow));
+        scan.setStopRow(Bytes.toBytes(stopRow));
 
-        String table = PropertyUtil.getProperty(Const.hbaseNamespace) + ":" + PropertyUtil.getProperty(Const.hbaseTableNamePrefix) + turbineCode;
-        TableMapReduceUtil.initTableMapperJob(table, // input HBase table name
+        String hbaseTableName = PropertyUtil.getProperty(Const.hbaseNamespace) + ":" + PropertyUtil.getProperty(Const.hbaseTableNamePrefix) + turbineCode;
+        TableMapReduceUtil.initTableMapperJob(hbaseTableName, // input HBase table name
                 scan, // Scan instance to control CF and attribute selection
                 ExportParquetMapper.class, // mapper
                 null, // mapper output key
@@ -114,8 +108,16 @@ public class ExportHBaseTableToParquet {
         job.setNumReduceTasks(0);
         boolean success = job.waitForCompletion(true);
         if (success) {
-            // TODO: 2017/11/23 create hive table
+            // create hive table
+            try {
+                HiveUtil.createTable(pathSuffix);
+            } catch (SQLException e) {
+                logger.error(e.getLocalizedMessage(), e);
+            }
+            // delete hbase data
+            HbaseUtil.deleteRows(hbaseTableName,startRow,stopRow);
 
+            // major compact
 
         }
 

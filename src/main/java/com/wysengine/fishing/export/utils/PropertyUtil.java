@@ -1,7 +1,6 @@
 package com.wysengine.fishing.export.utils;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,11 +35,6 @@ public class PropertyUtil {
 			map.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
 		}
 		return map;
-	}
-
-	public static void main(String[] args) {
-		Map<String, String> map = getPropertyMap();
-		System.out.println(map);
 	}
 
 }
