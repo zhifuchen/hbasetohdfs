@@ -1,12 +1,12 @@
-package com.wysengine.fishing.export.utils;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
+package com.wysengine.fishing.export.util;
 
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class HFileUtils {
   public static void changePermissionR(String output, FileSystem hdfs)

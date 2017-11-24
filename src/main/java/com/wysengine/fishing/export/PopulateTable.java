@@ -1,11 +1,7 @@
 package com.wysengine.fishing.export;
 
-import java.io.IOException;
-import java.util.Random;
-import java.util.regex.Pattern;
-
-import com.wysengine.fishing.export.utils.HFileUtils;
-import com.wysengine.fishing.export.utils.NMapInputFormat;
+import com.wysengine.fishing.export.util.HFileUtils;
+import com.wysengine.fishing.export.util.NMapInputFormat;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -21,6 +17,10 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+import java.io.IOException;
+import java.util.Random;
+import java.util.regex.Pattern;
 
 public class PopulateTable {
   public static String TABLE_NAME = "custom.table.name";

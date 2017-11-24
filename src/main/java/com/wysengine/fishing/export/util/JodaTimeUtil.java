@@ -1,4 +1,4 @@
-package com.wysengine.fishing.export.utils;
+package com.wysengine.fishing.export.util;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;

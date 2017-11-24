@@ -1,6 +1,5 @@
-package com.wysengine.fishing.export.utils;
+package com.wysengine.fishing.export.util;
 
-import com.wysengine.fishing.export.util.Const;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
@@ -14,20 +13,18 @@ import java.util.List;
  * Created by chenzhifu on 2017/11/23.
  */
 public class HbaseUtil {
-
-    private static Configuration getHbaseConfig() {
-        Configuration configuration = new Configuration();
+    private static final Configuration configuration = new Configuration();
+    static {
         configuration.set(Const.hbaseZookeeperQuorum, PropertyUtil.getProperty(Const.hbaseZookeeperQuorum));
         configuration.set(Const.hbaseZookeeperPropertyClientPort, PropertyUtil.getProperty(Const.hbaseZookeeperPropertyClientPort));
         configuration.set(Const.zookeeperZnodeParent, PropertyUtil.getProperty(Const.zookeeperZnodeParent));
-        return configuration;
     }
 
     public static void deleteRows(String tableName, String startRow, String stopRow) throws IOException {
         Scan scan = new Scan();
         scan.setStartRow(Bytes.toBytes(startRow));
         scan.setStopRow(Bytes.toBytes(stopRow));
-        try (Connection connection = ConnectionFactory.createConnection(getHbaseConfig());
+        try (Connection connection = ConnectionFactory.createConnection(configuration);
              Table table = connection.getTable(TableName.valueOf(tableName));
              ResultScanner resultScanner = table.getScanner(scan)) {
             List<Delete> deletes = new ArrayList<>();
@@ -40,7 +37,7 @@ public class HbaseUtil {
     }
 
     public static void majorCompact(String tableName) throws IOException {
-        try (Connection connection = ConnectionFactory.createConnection(getHbaseConfig());
+        try (Connection connection = ConnectionFactory.createConnection(configuration);
              Admin admin = connection.getAdmin()) {
             admin.majorCompact(TableName.valueOf(tableName));
         }
