@@ -31,11 +31,6 @@ public class ExportHBaseTableToParquet {
     public static final String ROW_KEY = "ROW_KEY";
 
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
-        if (args.length == 0) {
-            System.out.println("ExportHBaseTableToParquet {compressionCodec snappy,gzip}");
-            System.out.println("hadoop jar ./HBaseToHDFS.jar ExportHBaseTableToParquet gzip");
-            return;
-        }
         String compressionCodec = args[0];
 
         TurbineService turbineService = new TurbineService(PropertyUtil.getPropertyMap());
@@ -97,16 +92,12 @@ public class ExportHBaseTableToParquet {
         Schema.Parser parser = new Schema.Parser();
         AvroParquetOutputFormat.setSchema(job, parser.parse(schema));
 
-        switch (compressionCodec) {
-            case "snappy":
-                AvroParquetOutputFormat.setOutputCompressorClass(job, SnappyCodec.class);
-                break;
-            case "gzip":
-                AvroParquetOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
-                break;
-            default:
-                AvroParquetOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
-                break;
+        if ("snappy".equals(compressionCodec)) {
+            AvroParquetOutputFormat.setOutputCompressorClass(job, SnappyCodec.class);
+        } else if ("gzip".equals(compressionCodec)) {
+            AvroParquetOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
+        } else {
+            AvroParquetOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
         }
         job.setNumReduceTasks(0);
         boolean success = job.waitForCompletion(true);
