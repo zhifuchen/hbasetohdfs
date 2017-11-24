@@ -43,16 +43,16 @@ public class ExportHBaseTableToParquet {
     }
 
     private static void exportTable(String turbineCode, String compressionCodec) throws IOException, InterruptedException, ClassNotFoundException {
-        DateTime lastMonthDate = JodaTimeUtil.now().minusMonths(7);
+        DateTime exportMonth = JodaTimeUtil.now().minusMonths(7);
 
         // TODO: 2017/11/23
-//        DateTime.Property lastMonth = lastMonthDate.dayOfMonth();
-//        String startRow = String.valueOf(lastMonth.withMinimumValue().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate().getTime());
-//        String stopRow = String.valueOf(lastMonth.withMaximumValue().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).toDate().getTime());
+//        DateTime.Property exportMonthProp = exportMonth.dayOfMonth();
+//        String startRow = String.valueOf(exportMonthProp.withMinimumValue().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate().getTime());
+//        String stopRow = String.valueOf(exportMonthProp.withMaximumValue().withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).toDate().getTime());
         String startRow = "1508428800000";
         String stopRow = "1511107200000";
 
-        String pathSuffix = turbineCode + "_" + lastMonthDate.toString("yyyyMM");
+        String pathSuffix = turbineCode + "_" + exportMonth.toString("yyyyMM");
         String outputPath = PropertyUtil.getProperty("output.path");
         String parquetPath = outputPath + "parquet/" + pathSuffix;
         String schemaPath = outputPath + "schema/" + pathSuffix;
