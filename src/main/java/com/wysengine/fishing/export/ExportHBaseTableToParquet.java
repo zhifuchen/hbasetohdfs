@@ -75,7 +75,7 @@ public class ExportHBaseTableToParquet {
         HBaseConfiguration.addHbaseResources(configuration);
 
         job.setJarByClass(ExportHBaseTableToParquet.class);
-        job.setJobName("ExportHBaseTableToParquet");
+        job.setJobName("ExportHBaseTableToParquet" + pathSuffix);
 
         Scan scan = new Scan();
         scan.setCaching(500); // 1 is the default in Scan, which will be bad for MapReduce jobs
