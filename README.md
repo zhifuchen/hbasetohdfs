@@ -25,7 +25,7 @@ We have a HBase table and we would like to export it to Text, Seq, Avro, or Parq
 * hadoop jar HBaseToHDFS.jar AvroReader export.avro/part-m-00000 avro.schema 10
 
 #### Exports the data to Parquet
-* hadoop jar HBaseToHDFS.jar ExportHBaseTableToParquet exportTest c export.parquet false avro.schema
+* hadoop jar HBaseToHDFS.jar ExportHBaseTableToParquet
 
 ####
 * hadoop jar HBaseToHDFS.jar ParquetReader export.parquet/part-m-00000 10
