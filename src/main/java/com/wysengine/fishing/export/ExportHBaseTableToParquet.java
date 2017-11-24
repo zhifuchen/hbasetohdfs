@@ -3,7 +3,10 @@ package com.wysengine.fishing.export;
 import com.wysengine.fishing.export.service.TurbineConfigService;
 import com.wysengine.fishing.export.service.TurbineService;
 import com.wysengine.fishing.export.util.Const;
-import com.wysengine.fishing.export.utils.*;
+import com.wysengine.fishing.export.utils.HDFSUtil;
+import com.wysengine.fishing.export.utils.HiveUtil;
+import com.wysengine.fishing.export.utils.JodaTimeUtil;
+import com.wysengine.fishing.export.utils.PropertyUtil;
 import org.apache.avro.Schema;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -98,27 +101,30 @@ public class ExportHBaseTableToParquet {
         Schema.Parser parser = new Schema.Parser();
         AvroParquetOutputFormat.setSchema(job, parser.parse(schema));
 
-        if (compressionCodec.equals("snappy")) {
-            AvroParquetOutputFormat.setOutputCompressorClass(job, SnappyCodec.class);
-        } else if (compressionCodec.equals("gzip")) {
-            AvroParquetOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
-        } else {
-            AvroParquetOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
+        switch (compressionCodec) {
+            case "snappy":
+                AvroParquetOutputFormat.setOutputCompressorClass(job, SnappyCodec.class);
+                break;
+            case "gzip":
+                AvroParquetOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
+                break;
+            default:
+                AvroParquetOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
+                break;
         }
         job.setNumReduceTasks(0);
         boolean success = job.waitForCompletion(true);
         if (success) {
-            // create hive table
             try {
+                // create hive table
                 HiveUtil.createTable(pathSuffix);
+                // delete hbase data
+//                HbaseUtil.deleteRows(hbaseTableName, startRow, stopRow);
+                // major compact
+//                HbaseUtil.majorCompact(hbaseTableName);
             } catch (SQLException e) {
                 logger.error(e.getLocalizedMessage(), e);
             }
-            // delete hbase data
-            HbaseUtil.deleteRows(hbaseTableName,startRow,stopRow);
-
-            // major compact
-
         }
 
     }

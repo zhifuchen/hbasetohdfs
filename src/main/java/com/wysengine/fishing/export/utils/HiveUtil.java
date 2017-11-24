@@ -17,12 +17,8 @@ public class HiveUtil {
     private static final String hdfsUrl = PropertyUtil.getProperty("hdfs.default");
     private static final String outputPath = PropertyUtil.getProperty("output.path");
 
-    public static void createTable(String tableName) throws SQLException {
-        try {
-            Class.forName(driverName);
-        } catch (ClassNotFoundException e) {
-            logger.error(e.getLocalizedMessage(), e);
-        }
+    public static void createTable(String tableName) throws SQLException, ClassNotFoundException {
+        Class.forName(driverName);
         try (Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000", "hdfs", "");
              Statement stmt = con.createStatement()) {
             stmt.execute("DROP TABLE IF EXISTS " + tableName);

@@ -24,12 +24,12 @@ public class HbaseUtil {
     }
 
     public static void deleteRows(String tableName, String startRow, String stopRow) throws IOException {
+        Scan scan = new Scan();
+        scan.setStartRow(Bytes.toBytes(startRow));
+        scan.setStopRow(Bytes.toBytes(stopRow));
         try (Connection connection = ConnectionFactory.createConnection(getHbaseConfig());
-             Table table = connection.getTable(TableName.valueOf(tableName))) {
-            Scan scan = new Scan();
-            scan.setStartRow(Bytes.toBytes(startRow));
-            scan.setStopRow(Bytes.toBytes(stopRow));
-            ResultScanner resultScanner = table.getScanner(scan);
+             Table table = connection.getTable(TableName.valueOf(tableName));
+             ResultScanner resultScanner = table.getScanner(scan)) {
             List<Delete> deletes = new ArrayList<>();
             for (Result result : resultScanner) {
                 byte[] row = result.getRow();
@@ -38,4 +38,12 @@ public class HbaseUtil {
             table.delete(deletes);
         }
     }
+
+    public static void majorCompact(String tableName) throws IOException {
+        try (Connection connection = ConnectionFactory.createConnection(getHbaseConfig());
+             Admin admin = connection.getAdmin()) {
+            admin.majorCompact(TableName.valueOf(tableName));
+        }
+    }
+
 }
