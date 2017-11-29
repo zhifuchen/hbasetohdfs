@@ -73,7 +73,7 @@ public class TurbineConfigService implements Serializable {
 			Schema.FieldsBean fieldsBean = new Schema.FieldsBean();
 			fieldsBean.setName(String.valueOf(map.get("TAG_NAME_COM")).trim());
 			fieldsBean.setType(type);
-			fieldsBean.setDefault("");
+			fieldsBean.setDefault(null);
 			fieldsBean.setOrder("ignore");
 			fieldsBeanList.add(fieldsBean);
 		}
